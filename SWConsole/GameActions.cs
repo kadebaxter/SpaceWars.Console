@@ -42,6 +42,14 @@ public class GameActions
         await apiService.QueueAction(actions);
     }
 
+    public async Task MoveBackwardAsync(bool lightSpeed)
+    {
+        heading = ClampRotation(heading - 180);
+        var actions = Enumerable.Range(0, lightSpeed ? 10 : 1)
+                .Select(n => new QueueActionRequest("move", heading.ToString()));
+        await apiService.QueueAction(actions);
+    }
+
     public async Task FireWeaponAsync(string? weapon = null) => await apiService.QueueAction([new("fire", weapon ?? CurrentWeapon)]);
 
     public async Task RepairShipAsync() => await apiService.QueueAction([new("repair", null)]);

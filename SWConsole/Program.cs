@@ -16,6 +16,7 @@ class Program
         const ConsoleKey forwardKey = ConsoleKey.W;
         const ConsoleKey leftKey = ConsoleKey.A;
         const ConsoleKey rightKey = ConsoleKey.D;
+        const ConsoleKey backwardKey = ConsoleKey.S;
         const ConsoleKey fireKey = ConsoleKey.Spacebar;
         const ConsoleKey clearQueueKey = ConsoleKey.C;
         const ConsoleKey infoKey = ConsoleKey.I;
@@ -75,6 +76,9 @@ class Program
                 case var key when key == rightKey:
                     await gameActions.RotateRightAsync(shiftPressed);
                     break;
+                case var key when key == backwardKey:
+                    await gameActions.MoveBackwardAsync(shiftPressed);
+                    break;
                 case var key when key == fireKey:
                     await gameActions.FireWeaponAsync();
                     break;
@@ -126,23 +130,37 @@ class Program
                 //***  |    |    |    |       Add any other custom keys here       |    |    |    |    |
                 //***  V    V    V    V                                            V    V    V    V    V
                 //**************************************************************************************
-                case multipleRepairsKey:
+                case var key when key == multipleRepairsKey:
                     await gameActions.RepairShipAsync();
                     await gameActions.RepairShipAsync();
                     await gameActions.RepairShipAsync();
                     await gameActions.RepairShipAsync();
                     await gameActions.RepairShipAsync();
                     break;
-                case bombardmentKey:
+                case var key when key == bombardmentKey:
                     await gameActions.FireWeaponAsync();
                     await gameActions.FireWeaponAsync();
                     await gameActions.FireWeaponAsync();
                     await gameActions.FireWeaponAsync();
                     await gameActions.FireWeaponAsync();
                     break;
-                case ConsoleKey.H:
-                    //TODO: add in a left and right and forward bombardment key, something like shift that if pressed it will shoot and turn
+                case ConsoleKey.Q: //Turn left and fire
+                    await gameActions.RotateLeftAsync(shiftPressed);
+                    await gameActions.FireWeaponAsync();
+                    await gameActions.FireWeaponAsync();
+                    await gameActions.RotateLeftAsync(shiftPressed);
+                    await gameActions.FireWeaponAsync();
+                    await gameActions.FireWeaponAsync();
                     break;
+                case ConsoleKey.E: //Turn left and fire
+                    await gameActions.RotateRightAsync(shiftPressed);
+                    await gameActions.FireWeaponAsync();
+                    await gameActions.FireWeaponAsync();
+                    await gameActions.RotateRightAsync(shiftPressed);
+                    await gameActions.FireWeaponAsync();
+                    await gameActions.FireWeaponAsync();
+                    break;
+                //TODO: add in a left and right and forward bombardment key, something like shift that if pressed it will shoot and turn
             }
         }
 
