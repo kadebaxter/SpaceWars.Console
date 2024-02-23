@@ -1,5 +1,6 @@
 ﻿using SWConsole;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace SpaceWarsServices;
 
@@ -12,15 +13,18 @@ class Program
         //***  |    |    |    |       Change your key mappings here        |    |    |    |    |
         //***  V    V    V    V                                            V    V    V    V    V
         //**************************************************************************************
-        const ConsoleKey forwardKey = ConsoleKey.UpArrow;
-        const ConsoleKey leftKey = ConsoleKey.LeftArrow;
-        const ConsoleKey rightKey = ConsoleKey.RightArrow;
+        const ConsoleKey forwardKey = ConsoleKey.W;
+        const ConsoleKey leftKey = ConsoleKey.A;
+        const ConsoleKey rightKey = ConsoleKey.D;
         const ConsoleKey fireKey = ConsoleKey.Spacebar;
         const ConsoleKey clearQueueKey = ConsoleKey.C;
         const ConsoleKey infoKey = ConsoleKey.I;
-        const ConsoleKey shopKey = ConsoleKey.S;
+        const ConsoleKey shopKey = ConsoleKey.F;
         const ConsoleKey repairKey = ConsoleKey.R;
         const ConsoleKey readAndEmptyMessagesKey = ConsoleKey.M;
+        const ConsoleKey multipleRepairsKey = ConsoleKey.N;
+        const ConsoleKey bombardmentKey = ConsoleKey.B;
+
 
         Uri baseAddress = getApiBaseAddress(args);
         using HttpClient httpClient = new HttpClient() { BaseAddress = baseAddress };
@@ -78,6 +82,7 @@ class Program
                     await gameActions.ClearQueueAsync();
                     break;
                 case var key when key == repairKey:
+                    await gameActions.ClearQueueAsync();
                     await gameActions.RepairShipAsync();
                     Console.WriteLine("Ship repair requested.");
                     break;
@@ -121,8 +126,22 @@ class Program
                 //***  |    |    |    |       Add any other custom keys here       |    |    |    |    |
                 //***  V    V    V    V                                            V    V    V    V    V
                 //**************************************************************************************
-                case ConsoleKey.N:
-                    //example
+                case multipleRepairsKey:
+                    await gameActions.RepairShipAsync();
+                    await gameActions.RepairShipAsync();
+                    await gameActions.RepairShipAsync();
+                    await gameActions.RepairShipAsync();
+                    await gameActions.RepairShipAsync();
+                    break;
+                case bombardmentKey:
+                    await gameActions.FireWeaponAsync();
+                    await gameActions.FireWeaponAsync();
+                    await gameActions.FireWeaponAsync();
+                    await gameActions.FireWeaponAsync();
+                    await gameActions.FireWeaponAsync();
+                    break;
+                case ConsoleKey.H:
+                    //TODO: add in a left and right and forward bombardment key, something like shift that if pressed it will shoot and turn
                     break;
             }
         }
@@ -133,6 +152,7 @@ class Program
             Console.WriteLine($"Name: {username,-34} Token: {gameActions.Token}");
             Console.WriteLine($"Left: {leftKey,-12} Right: {rightKey,-12} Forward: {forwardKey,-12} Fire: {fireKey,-12} Clear Queue: {clearQueueKey,-12}");
             Console.WriteLine($"Info: {infoKey,-12}  Shop: {shopKey,-12}  Repair: {repairKey,-12} Read & Empty Messages: {readAndEmptyMessagesKey,-12}");
+            Console.WriteLine($"HRepair: {multipleRepairsKey, -12} Bombardment: {bombardmentKey, -12}");
 
             for (int i = 0; i < gameActions.Weapons.Count; i++)
             {
